@@ -36,7 +36,7 @@ function dictate()
     }
 
     ajax({
-        url: encodeURI("https://assist.crc32.dev/assist/?query=${e.transcription}&clientid=${Settings.option('clientid')}&clientsecret=${Settings.option('clientsecret')}&clientrefresh=${Settings.option('clientrefresh')}"),
+        url: encodeURI("https://assist.crc32.dev/assist/?query=" + e.transcription + "&clientid=" + Settings.option('clientid') + "&clientsecret=" + Settings.option('clientsecret') + "&clientrefresh=" + Settings.option('clientrefresh')),
         method: 'GET',
         type: undefined,
         headers: {
