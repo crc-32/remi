@@ -22,6 +22,51 @@ Settings.config(
   }
 );
 
+var geoOptions = {
+  enableHighAccuracy: true,
+  maximumAge: 5000,
+  timeout: 10000
+};
+
+function sendQuery(transcription, lat = undefined, long = undefined)
+{
+  var url = encodeURI("https://assist.crc32.dev/assist/?query=" + transcription + "&clientid=" + Settings.option('clientid') + "&clientsecret=" + Settings.option('clientsecret') + "&clientrefresh=" + Settings.option('clientrefresh'));
+  if (lat !== undefined)
+  {
+    url += encodeURI("&lat=" + lat + "&long=" + long);
+  }
+  ajax({
+    url: encodeURI("https://assist.crc32.dev/assist/?query=" + transcription + "&clientid=" + Settings.option('clientid') + "&clientsecret=" + Settings.option('clientsecret') + "&clientrefresh=" + Settings.option('clientrefresh')),
+    method: 'GET',
+    type: undefined,
+    headers: {
+    }
+  },
+  function(data, status, request) {
+    var card = new UI.Card({
+      title: 'Assistant',
+      body: data,
+      scrollable: true,
+      status: statusDef,
+      style: 'large'
+    });
+    card.on('click', 'select', dictate);
+    Vibe.vibrate('short');
+    card.show();
+  },
+  function(error, status, request) {
+    var card = new UI.Card({
+      title: 'Error',
+      body: 'Error occurred while processing, check your internet!\n' + status,
+      scrollable: true,
+      status: statusDef
+    });
+    Vibe.vibrate('short');
+    card.show();
+  }
+  );
+}
+
 function dictate()
 {
   Voice.dictate('start', true, function(e) {
@@ -35,37 +80,12 @@ function dictate()
       card.show();
     }
 
-    ajax({
-        url: encodeURI("https://assist.crc32.dev/assist/?query=" + e.transcription + "&clientid=" + Settings.option('clientid') + "&clientsecret=" + Settings.option('clientsecret') + "&clientrefresh=" + Settings.option('clientrefresh')),
-        method: 'GET',
-        type: undefined,
-        headers: {
-        }
-      },
-      function(data, status, request) {
-        var card = new UI.Card({
-          title: 'Assistant',
-          body: data,
-          scrollable: true,
-          status: statusDef,
-          style: 'large'
-        });
-        card.on('click', 'select', dictate);
-        Vibe.vibrate('short');
-        card.show();
-      },
-      function(error, status, request) {
-        var card = new UI.Card({
-          title: 'Error',
-          body: 'Error occurred while processing, check your internet!\n' + status,
-          scrollable: true,
-          status: statusDef
-        });
-        Vibe.vibrate('short');
-        card.show();
-      }
-    );
-
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      sendQuery(e.transcription, pos.coords.latitude, pos.coords.longitude);
+    }, function (err) {
+      console.log(err);
+      sendQuery(e.transcription);
+    }, geoOptions);
   });
 }
 

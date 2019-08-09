@@ -39,8 +39,8 @@
     "emery"
   ],
   "uuid": "10c16594-a942-4e6e-aa49-8aa04d56fae7",
-  "versionCode": 1,
-  "versionLabel": "0.1",
+  "versionCode": 2,
+  "versionLabel": "0.2",
   "watchapp": {
     "watchface": false
   }
