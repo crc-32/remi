@@ -13,7 +13,7 @@ var ajax = require('ajax');
 const statusDef = {separator: 'none', color: 'white', backgroundColor: 'black'};
 
 Settings.config(
-  { url: 'https://assist.crc32.dev/config.html' },
+  { url: "https://assist.crc32.dev/config.html" },
   function(e) {
     console.log('opening configurable');
   },
@@ -36,7 +36,7 @@ function dictate()
     }
 
     ajax({
-        url: encodeURI(`https://assist.crc32.dev/assist/?query=${e.transcription}&clientid=${Settings.option('clientid')}&clientsecret=${Settings.option('clientsecret')}&clientrefresh=${Settings.option('clientrefresh')}`),
+        url: encodeURI("https://assist.crc32.dev/assist/?query=${e.transcription}&clientid=${Settings.option('clientid')}&clientsecret=${Settings.option('clientsecret')}&clientrefresh=${Settings.option('clientrefresh')}"),
         method: 'GET',
         type: undefined,
         headers: {
@@ -57,7 +57,7 @@ function dictate()
       function(error, status, request) {
         var card = new UI.Card({
           title: 'Error',
-          body: 'Error occured while processing, check your internet!\n' + status,
+          body: 'Error occurred while processing, check your internet!\n' + status,
           scrollable: true,
           status: statusDef
         });
